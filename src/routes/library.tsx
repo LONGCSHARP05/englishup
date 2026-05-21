@@ -83,10 +83,10 @@ function LibraryPage() {
 
       {materials.length > 0 && (
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-          <StatPill label="Tổng" value={counts.total} tone="default" />
-          <StatPill label="Đang xử lý" value={counts.processing} tone="amber" icon={Loader2} spin />
-          <StatPill label="Sẵn sàng" value={counts.ready} tone="teal" icon={CheckCircle2} />
-          <StatPill label="Thất bại" value={counts.failed} tone="destructive" icon={AlertTriangle} />
+          <StatPill label="Tổng" value={counts.total} tone="default" active={statusFilter === "all"} onClick={() => setStatusFilter("all")} />
+          <StatPill label="Đang xử lý" value={counts.processing} tone="amber" icon={Loader2} spin active={statusFilter === "processing"} onClick={() => setStatusFilter(statusFilter === "processing" ? "all" : "processing")} />
+          <StatPill label="Sẵn sàng" value={counts.ready} tone="teal" icon={CheckCircle2} active={statusFilter === "ready"} onClick={() => setStatusFilter(statusFilter === "ready" ? "all" : "ready")} />
+          <StatPill label="Thất bại" value={counts.failed} tone="destructive" icon={AlertTriangle} active={statusFilter === "failed"} onClick={() => setStatusFilter(statusFilter === "failed" ? "all" : "failed")} />
         </div>
       )}
 
@@ -160,12 +160,16 @@ function StatPill({
   tone,
   icon: Icon,
   spin,
+  active,
+  onClick,
 }: {
   label: string;
   value: number;
   tone: "default" | "teal" | "amber" | "destructive";
   icon?: React.ComponentType<{ className?: string }>;
   spin?: boolean;
+  active?: boolean;
+  onClick?: () => void;
 }) {
   const toneCls = {
     default: "bg-card text-foreground border-border",
@@ -174,12 +178,15 @@ function StatPill({
     destructive: "bg-destructive/10 text-destructive border-destructive/20",
   }[tone];
   return (
-    <div className={`flex items-center gap-3 rounded-xl border px-4 py-3 ${toneCls}`}>
+    <button
+      onClick={onClick}
+      className={`btn-press flex items-center gap-3 rounded-xl border px-4 py-3 text-left transition-all ${toneCls} ${active ? "ring-2 ring-offset-2 ring-offset-background ring-current" : ""}`}
+    >
       {Icon && <Icon className={`h-5 w-5 ${spin ? "animate-spin" : ""}`} />}
       <div>
         <div className="font-mono text-xl font-semibold">{value}</div>
         <div className="text-xs opacity-80">{label}</div>
       </div>
-    </div>
+    </button>
   );
 }
