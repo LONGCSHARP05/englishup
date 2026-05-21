@@ -46,37 +46,45 @@ export function UploadDialog({ open, onOpenChange }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-xl gap-0 p-0">
-        <DialogHeader className="border-b border-border px-5 py-4">
-          <DialogTitle className="flex items-center gap-2 font-display text-xl">
+      <DialogContent className="w-[calc(100vw-24px)] max-w-[640px] gap-0 overflow-hidden p-0 sm:w-full">
+        <DialogHeader className="border-b border-border px-5 py-4 pr-12">
+          <DialogTitle className="flex items-center gap-2 font-display text-lg sm:text-xl">
             <Sparkles className="h-5 w-5 text-teal" />
             Tạo bài học mới với AI
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-xs sm:text-sm">
             Tải tài liệu lên — AI sẽ tự động tạo flashcard và bài học cho bạn.
           </DialogDescription>
         </DialogHeader>
 
-        <Tabs value={tab} onValueChange={(v) => setTab(v as MaterialType)} className="p-5">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="pdf" className="gap-1.5">
-              <FileText className="h-4 w-4" /> PDF
+        <Tabs
+          value={tab}
+          onValueChange={(v) => setTab(v as MaterialType)}
+          className="w-full min-w-0 max-w-full overflow-hidden p-4 sm:p-5"
+        >
+          <TabsList className="grid w-full grid-cols-4 gap-1">
+            <TabsTrigger value="pdf" className="min-w-0 gap-1 px-1 sm:gap-1.5 sm:px-3">
+              <FileText className="h-4 w-4 shrink-0" />
+              <span className="truncate text-xs sm:text-sm">PDF</span>
             </TabsTrigger>
-            <TabsTrigger value="youtube" className="gap-1.5">
-              <Youtube className="h-4 w-4" /> YouTube
+            <TabsTrigger value="youtube" className="min-w-0 gap-1 px-1 sm:gap-1.5 sm:px-3">
+              <Youtube className="h-4 w-4 shrink-0" />
+              <span className="truncate text-xs sm:text-sm">YouTube</span>
             </TabsTrigger>
-            <TabsTrigger value="article" className="gap-1.5">
-              <Globe className="h-4 w-4" /> Bài viết
+            <TabsTrigger value="article" className="min-w-0 gap-1 px-1 sm:gap-1.5 sm:px-3">
+              <Globe className="h-4 w-4 shrink-0" />
+              <span className="truncate text-xs sm:text-sm">Bài viết</span>
             </TabsTrigger>
-            <TabsTrigger value="paste" className="gap-1.5">
-              <AlignLeft className="h-4 w-4" /> Dán
+            <TabsTrigger value="paste" className="min-w-0 gap-1 px-1 sm:gap-1.5 sm:px-3">
+              <AlignLeft className="h-4 w-4 shrink-0" />
+              <span className="truncate text-xs sm:text-sm">Dán</span>
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="pdf" className="mt-4">
+          <TabsContent value="pdf" className="mt-4 w-full min-w-0 max-w-full">
             <PdfTab onDone={() => onOpenChange(false)} />
           </TabsContent>
-          <TabsContent value="youtube" className="mt-4">
+          <TabsContent value="youtube" className="mt-4 w-full min-w-0 max-w-full">
             <SimpleTextTab
               type="youtube"
               label="Liên kết YouTube"
@@ -86,7 +94,7 @@ export function UploadDialog({ open, onOpenChange }: Props) {
               onDone={() => onOpenChange(false)}
             />
           </TabsContent>
-          <TabsContent value="article" className="mt-4">
+          <TabsContent value="article" className="mt-4 w-full min-w-0 max-w-full">
             <SimpleTextTab
               type="article"
               label="Đường dẫn bài viết"
@@ -96,7 +104,7 @@ export function UploadDialog({ open, onOpenChange }: Props) {
               onDone={() => onOpenChange(false)}
             />
           </TabsContent>
-          <TabsContent value="paste" className="mt-4">
+          <TabsContent value="paste" className="mt-4 w-full min-w-0 max-w-full">
             <PasteTab onDone={() => onOpenChange(false)} />
           </TabsContent>
         </Tabs>
@@ -149,7 +157,7 @@ function PdfTab({ onDone }: { onDone: () => void }) {
   };
 
   return (
-    <div className="space-y-3">
+    <div className="w-full min-w-0 max-w-full space-y-3">
       <div
         onDragOver={(e) => {
           e.preventDefault();
@@ -163,7 +171,7 @@ function PdfTab({ onDone }: { onDone: () => void }) {
           if (f) handleFile(f);
         }}
         onClick={() => inputRef.current?.click()}
-        className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed p-8 text-center transition-colors ${
+        className={`flex w-full max-w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed p-6 text-center transition-colors sm:p-8 ${
           dragging
             ? "border-teal bg-teal/5"
             : "border-border bg-secondary/40 hover:border-teal/60 hover:bg-teal/5"
@@ -172,8 +180,8 @@ function PdfTab({ onDone }: { onDone: () => void }) {
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-teal/15 text-teal">
           <UploadCloud className="h-6 w-6" />
         </div>
-        <div className="font-medium">Kéo & thả tệp PDF vào đây</div>
-        <div className="text-xs text-muted-foreground">
+        <div className="text-sm font-medium sm:text-base">Kéo & thả tệp PDF vào đây</div>
+        <div className="text-xs text-muted-foreground break-words">
           hoặc nhấp để chọn tệp · tối đa {formatBytes(MAX_FILE_BYTES)}
         </div>
         <input
@@ -190,19 +198,19 @@ function PdfTab({ onDone }: { onDone: () => void }) {
       </div>
 
       {file && (
-        <div className="flex items-center justify-between gap-3 rounded-lg border border-border bg-card p-3">
-          <div className="flex min-w-0 items-center gap-2.5">
+        <div className="flex w-full min-w-0 max-w-full items-center justify-between gap-3 rounded-lg border border-border bg-card p-3">
+          <div className="flex min-w-0 flex-1 items-center gap-2.5">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo/15 text-indigo">
               <FileText className="h-4 w-4" />
             </div>
-            <div className="min-w-0">
+            <div className="min-w-0 flex-1">
               <div className="truncate text-sm font-medium">{file.name}</div>
               <div className="text-xs text-muted-foreground">{formatBytes(file.size)}</div>
             </div>
           </div>
           <button
             onClick={() => setFile(null)}
-            className="rounded-md p-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground"
+            className="shrink-0 rounded-md p-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground"
             aria-label="Bỏ chọn tệp"
           >
             <X className="h-4 w-4" />
@@ -213,7 +221,11 @@ function PdfTab({ onDone }: { onDone: () => void }) {
       {error && <ErrorLine msg={error} />}
 
       <div className="flex justify-end pt-1">
-        <Button onClick={submit} disabled={!file} className="bg-teal text-teal-foreground hover:bg-teal/90">
+        <Button
+          onClick={submit}
+          disabled={!file}
+          className="w-full bg-teal text-teal-foreground hover:bg-teal/90 sm:w-auto"
+        >
           Bắt đầu xử lý
         </Button>
       </div>
@@ -258,7 +270,7 @@ function SimpleTextTab({
   };
 
   return (
-    <div className="space-y-3">
+    <div className="w-full min-w-0 max-w-full space-y-3">
       <div className="space-y-1.5">
         <Label htmlFor={`url-${type}`}>{label}</Label>
         <Input
@@ -270,11 +282,15 @@ function SimpleTextTab({
           }}
           placeholder={placeholder}
           autoComplete="off"
+          className="w-full min-w-0"
         />
       </div>
       {error && <ErrorLine msg={error} />}
       <div className="flex justify-end pt-1">
-        <Button onClick={submit} className="bg-teal text-teal-foreground hover:bg-teal/90">
+        <Button
+          onClick={submit}
+          className="w-full bg-teal text-teal-foreground hover:bg-teal/90 sm:w-auto"
+        >
           Bắt đầu xử lý
         </Button>
       </div>
@@ -309,7 +325,7 @@ function PasteTab({ onDone }: { onDone: () => void }) {
   };
 
   return (
-    <div className="space-y-3">
+    <div className="w-full min-w-0 max-w-full space-y-3">
       <div className="space-y-1.5">
         <Label htmlFor="paste-title">Tiêu đề (không bắt buộc)</Label>
         <Input
@@ -318,6 +334,7 @@ function PasteTab({ onDone }: { onDone: () => void }) {
           onChange={(e) => setTitle(e.target.value)}
           maxLength={120}
           placeholder="VD: Bài đọc IELTS Cambridge 17"
+          className="w-full min-w-0"
         />
       </div>
       <div className="space-y-1.5">
@@ -332,15 +349,19 @@ function PasteTab({ onDone }: { onDone: () => void }) {
           rows={8}
           maxLength={50000}
           placeholder="Dán đoạn văn bản tiếng Anh bạn muốn học vào đây..."
+          className="w-full min-w-0 resize-y"
         />
-        <div className="flex justify-between text-xs text-muted-foreground">
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-xs text-muted-foreground">
           <span>Tối thiểu 20 từ · tối đa 50.000 ký tự</span>
           <span className="font-mono">{wordCount} từ · {text.length} ký tự</span>
         </div>
       </div>
       {error && <ErrorLine msg={error} />}
       <div className="flex justify-end pt-1">
-        <Button onClick={submit} className="bg-teal text-teal-foreground hover:bg-teal/90">
+        <Button
+          onClick={submit}
+          className="w-full bg-teal text-teal-foreground hover:bg-teal/90 sm:w-auto"
+        >
           Bắt đầu xử lý
         </Button>
       </div>
