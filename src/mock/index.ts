@@ -60,6 +60,13 @@ export const mockVocabulary: VocabItem[] = [
 
 export type MaterialType = "pdf" | "youtube" | "paste" | "article";
 export type MaterialStatus = "uploading" | "processing" | "ready" | "failed";
+export type ProcessingStage =
+  | "uploading"
+  | "extracting"
+  | "analyzing"
+  | "generating"
+  | "ready"
+  | "failed";
 export type Material = {
   id: string;
   title: string;
@@ -68,6 +75,11 @@ export type Material = {
   wordCount?: number;
   createdAt: string;
   errorMessage?: string;
+  stage?: ProcessingStage;
+  progress?: number;
+  generatedFlashcards?: number;
+  sourceMeta?: string;
+  fileSize?: number;
 };
 
 export const mockMaterials: Material[] = [
