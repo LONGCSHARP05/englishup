@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, FileText, Youtube, Globe, AlignLeft, Loader2, type LucideIcon } from "lucide-react";
-import { mockMaterials, type Material } from "@/mock";
+import { type Material } from "@/mock";
+import { useMaterialsStore } from "@/store/useMaterialsStore";
 
 const typeMap: Record<Material["type"], { icon: LucideIcon; label: string; cls: string }> = {
   pdf: { icon: FileText, label: "PDF", cls: "bg-indigo/15 text-indigo" },
@@ -25,7 +26,10 @@ function relativeTime(iso: string) {
 }
 
 export function RecentMaterials() {
-  const recent = [...mockMaterials].sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt)).slice(0, 3);
+  const { materials } = useMaterialsStore();
+  const recent = [...materials]
+    .sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt))
+    .slice(0, 3);
   return (
     <section className="space-y-3">
       <div className="flex items-center justify-between">
