@@ -59,7 +59,7 @@ function BookReaderPage() {
   } = useBookStore();
 
   const addVocab = useVocabStore((s) => s.addWord);
-  const vocabWords = useVocabStore((s) => s.words);
+  const vocabWords = useVocabStore((s) => s.vocab);
 
   const savedProgress = getProgress(bookId);
   const [currentPage, setPage] = useState(savedProgress?.currentPage ?? 1);
@@ -518,7 +518,7 @@ function BookReaderPage() {
                 setSelectedWord(null);
               }}
               existsInVocab={vocabWords.some(
-                (v) => v.word.toLowerCase() === selectedWord.toLowerCase()
+                (v: { word: string }) => v.word.toLowerCase() === selectedWord.toLowerCase()
               )}
             />
           )}
