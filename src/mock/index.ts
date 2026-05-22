@@ -136,6 +136,45 @@ export const mockBooks: Book[] = [
   { id: "b4", title: "Sapiens (Adapted)", author: "Yuval Noah Harari", coverGradient: "from-coral to-amber", level: "C1", totalPages: 240, isPremium: true, rubyPrice: 100, status: "published" },
 ];
 
+export type BookPage = {
+  pageNumber: number;
+  content: string;
+  hasImage?: boolean;
+};
+
+export const mockBookPages: Record<string, BookPage[]> = {
+  b1: Array.from({ length: 96 }, (_, i) => ({
+    pageNumber: i + 1,
+    content: i === 0
+      ? "Once when I was six years old I saw a magnificent picture in a book, called True Stories from Nature, about the primeval forest. It was a picture of a boa constrictor in the act of swallowing an animal."
+      : i === 1
+        ? "In the book it said: \"Boa constrictors swallow their prey whole, without chewing it. After that they are not able to move, and they sleep through the six months that they need for digestion.\""
+        : `Page ${i + 1}: The Little Prince continued his journey across the universe, meeting strange characters and learning important lessons about friendship, love, and responsibility.`,
+    hasImage: i % 10 === 0,
+  })),
+  b2: Array.from({ length: 112 }, (_, i) => ({
+    pageNumber: i + 1,
+    content: i === 0
+      ? "Mr. Jones, of the Manor Farm, had locked the hen-houses for the night, but was too drunk to remember to shut the pop-holes."
+      : `Page ${i + 1}: The animals on the farm continued their revolution. The Seven Commandments were written on the barn wall...`,
+    hasImage: i % 12 === 0,
+  })),
+  b3: Array.from({ length: 180 }, (_, i) => ({
+    pageNumber: i + 1,
+    content: i === 0
+      ? "In my younger and more vulnerable years my father gave me some advice that I've been turning over in my mind ever since."
+      : `Page ${i + 1}: Gatsby looked across the bay toward the green light at the end of Daisy's dock. He believed the future would bring something wonderful...`,
+    hasImage: i % 15 === 0,
+  })),
+  b4: Array.from({ length: 240 }, (_, i) => ({
+    pageNumber: i + 1,
+    content: i === 0
+      ? "About 13.5 billion years ago, matter, energy, time and space came into being in what is known as the Big Bang."
+      : `Page ${i + 1}: Humans evolved over millions of years to become the dominant species on this planet. But what makes Homo sapiens different?`,
+    hasImage: i % 20 === 0,
+  })),
+};
+
 export const mockProgress = {
   xpEarned: [120, 180, 90, 220, 140, 300, 240, 160, 200, 110, 280, 320, 180, 240],
   wordsReviewed: [12, 18, 8, 22, 14, 30, 24, 16, 20, 11, 28, 32, 18, 24],
