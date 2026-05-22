@@ -107,7 +107,8 @@ export function MaterialCard({ material }: { material: Material }) {
 
       {isReady && (
         <Link
-          to="/vocabulary"
+          to="/lesson/$lessonId"
+          params={{ lessonId: material.id }}
           className="btn-press mt-1 inline-flex items-center justify-center gap-1.5 self-start rounded-full bg-teal px-3.5 py-1.5 text-xs font-semibold text-teal-foreground"
         >
           Học ngay <ArrowRight className="h-3.5 w-3.5" />
