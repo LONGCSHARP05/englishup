@@ -52,6 +52,7 @@ function LessonPage() {
   // Track scroll progress within content area
   useEffect(() => {
     if (!lesson) return;
+    const lessonId2 = lesson.id;
     function onScroll() {
       const el = contentRef.current;
       if (!el) return;
@@ -61,7 +62,7 @@ function LessonPage() {
       const scrolled = Math.max(0, viewportH * 0.4 - rect.top);
       const pct = total > 0 ? Math.min(100, (scrolled / total) * 100) : 0;
       setScrollProgress(pct);
-      setPercent(lesson.id, pct);
+      setPercent(lessonId2, pct);
     }
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
