@@ -12,13 +12,6 @@ export default defineConfig({
   tanstackStart: {
     server: { entry: "server" },
   },
-// Thêm cấu hình vite vào đây để kiểm soát port
-  vite: {
-    server: {
-      port: 8080,
-      strictPort: true, // Ép buộc chỉ chạy port 8080, không tự ý đổi sang port khác
-    },
-  },
 });
 
 
