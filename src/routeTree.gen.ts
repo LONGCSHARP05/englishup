@@ -21,6 +21,7 @@ import { Route as BooksRouteImport } from './routes/books'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as LessonLessonIdRouteImport } from './routes/lesson.$lessonId'
+import { Route as BooksBookIdRouteImport } from './routes/books.$bookId'
 
 const VocabularyRoute = VocabularyRouteImport.update({
   id: '/vocabulary',
@@ -82,11 +83,16 @@ const LessonLessonIdRoute = LessonLessonIdRouteImport.update({
   path: '/lesson/$lessonId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BooksBookIdRoute = BooksBookIdRouteImport.update({
+  id: '/$bookId',
+  path: '/$bookId',
+  getParentRoute: () => BooksRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
-  '/books': typeof BooksRoute
+  '/books': typeof BooksRouteWithChildren
   '/leaderboard': typeof LeaderboardRoute
   '/library': typeof LibraryRoute
   '/listening': typeof ListeningRoute
@@ -95,12 +101,13 @@ export interface FileRoutesByFullPath {
   '/reading': typeof ReadingRoute
   '/shop': typeof ShopRoute
   '/vocabulary': typeof VocabularyRoute
+  '/books/$bookId': typeof BooksBookIdRoute
   '/lesson/$lessonId': typeof LessonLessonIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
-  '/books': typeof BooksRoute
+  '/books': typeof BooksRouteWithChildren
   '/leaderboard': typeof LeaderboardRoute
   '/library': typeof LibraryRoute
   '/listening': typeof ListeningRoute
@@ -109,13 +116,14 @@ export interface FileRoutesByTo {
   '/reading': typeof ReadingRoute
   '/shop': typeof ShopRoute
   '/vocabulary': typeof VocabularyRoute
+  '/books/$bookId': typeof BooksBookIdRoute
   '/lesson/$lessonId': typeof LessonLessonIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
-  '/books': typeof BooksRoute
+  '/books': typeof BooksRouteWithChildren
   '/leaderboard': typeof LeaderboardRoute
   '/library': typeof LibraryRoute
   '/listening': typeof ListeningRoute
@@ -124,6 +132,7 @@ export interface FileRoutesById {
   '/reading': typeof ReadingRoute
   '/shop': typeof ShopRoute
   '/vocabulary': typeof VocabularyRoute
+  '/books/$bookId': typeof BooksBookIdRoute
   '/lesson/$lessonId': typeof LessonLessonIdRoute
 }
 export interface FileRouteTypes {
@@ -140,6 +149,7 @@ export interface FileRouteTypes {
     | '/reading'
     | '/shop'
     | '/vocabulary'
+    | '/books/$bookId'
     | '/lesson/$lessonId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -154,6 +164,7 @@ export interface FileRouteTypes {
     | '/reading'
     | '/shop'
     | '/vocabulary'
+    | '/books/$bookId'
     | '/lesson/$lessonId'
   id:
     | '__root__'
@@ -168,13 +179,14 @@ export interface FileRouteTypes {
     | '/reading'
     | '/shop'
     | '/vocabulary'
+    | '/books/$bookId'
     | '/lesson/$lessonId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
-  BooksRoute: typeof BooksRoute
+  BooksRoute: typeof BooksRouteWithChildren
   LeaderboardRoute: typeof LeaderboardRoute
   LibraryRoute: typeof LibraryRoute
   ListeningRoute: typeof ListeningRoute
@@ -272,13 +284,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LessonLessonIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/books/$bookId': {
+      id: '/books/$bookId'
+      path: '/$bookId'
+      fullPath: '/books/$bookId'
+      preLoaderRoute: typeof BooksBookIdRouteImport
+      parentRoute: typeof BooksRoute
+    }
   }
 }
+
+interface BooksRouteChildren {
+  BooksBookIdRoute: typeof BooksBookIdRoute
+}
+
+const BooksRouteChildren: BooksRouteChildren = {
+  BooksBookIdRoute: BooksBookIdRoute,
+}
+
+const BooksRouteWithChildren = BooksRoute._addFileChildren(BooksRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
-  BooksRoute: BooksRoute,
+  BooksRoute: BooksRouteWithChildren,
   LeaderboardRoute: LeaderboardRoute,
   LibraryRoute: LibraryRoute,
   ListeningRoute: ListeningRoute,
@@ -292,3 +321,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
