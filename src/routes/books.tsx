@@ -2,12 +2,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { BookStoreHero } from "@/components/books/BookStoreHero";
 import { BookInsightCards } from "@/components/books/BookInsightCards";
 import { BookFilters, type SortKey } from "@/components/books/BookFilters";
 import { BookCard } from "@/components/books/BookCard";
 import { UnlockBookDialog } from "@/components/books/UnlockBookDialog";
-import { mockBooks, type BookData } from "@/mock/books";
+import { UploadBookDialog } from "@/components/books/UploadBookDialog";
+import { mockBooks, type BookData, type BookLevel, type BookCategory } from "@/mock/books";
 import { useBooksStore } from "@/store/useBooksStore";
 import { useAppStore } from "@/store/useAppStore";
 
@@ -30,9 +33,11 @@ function BooksPage() {
   const [filter, setFilter] = useState("Tất cả");
   const [sort, setSort] = useState<SortKey>("newest");
   const [unlockTarget, setUnlockTarget] = useState<BookData | null>(null);
+  const [uploadOpen, setUploadOpen] = useState(false);
+  const [userBooks, setUserBooks] = useState<BookData[]>([]);
 
   const filtered = useMemo(() => {
-    let list = mockBooks.slice();
+    let list = [...mockBooks, ...userBooks];
     if (query.trim()) {
       const q = query.toLowerCase();
       list = list.filter(
@@ -57,7 +62,7 @@ function BooksPage() {
     else if (sort === "level-asc")
       list.sort((a, b) => levelOrder.indexOf(a.level) - levelOrder.indexOf(b.level));
     return list;
-  }, [query, filter, sort]);
+  }, [query, filter, sort, userBooks]);
 
   const continueBookId = useMemo(() => {
     const inProgress = Object.entries(currentPage).find(([, p]) => p > 1);
@@ -66,16 +71,61 @@ function BooksPage() {
 
   const goRead = (id: string) => navigate({ to: "/books/$bookId", params: { bookId: id } });
 
+  const handleUploadBook = (bookData: {
+    title: string;
+    author: string;
+    level: BookLevel;
+    category: BookCategory;
+    isPremium: boolean;
+    rubyPrice: number;
+  }) => {
+    const gradients = [
+      "linear-gradient(135deg, var(--amber), var(--coral))",
+      "linear-gradient(135deg, var(--indigo), var(--teal))",
+      "linear-gradient(135deg, var(--teal), var(--indigo))",
+      "linear-gradient(135deg, var(--coral), var(--amber))",
+    ];
+    const newBook: BookData = {
+      id: `bk-user-${Date.now()}`,
+      title: bookData.title,
+      author: bookData.author,
+      coverGradient: gradients[Math.floor(Math.random() * gradients.length)],
+      level: bookData.level,
+      totalPages: 8,
+      category: bookData.category,
+      isPremium: bookData.isPremium,
+      rubyPrice: bookData.rubyPrice,
+      readCount: 0,
+      createdAt: new Date().toISOString(),
+      shortDescription: "Sách do người dùng thêm vào thư viện.",
+      pages: [],
+    };
+    setUserBooks((prev) => [newBook, ...prev]);
+    toast.success("Sách đã được thêm vào Thư viện sách");
+  };
+
   return (
     <div className="mx-auto w-full max-w-7xl space-y-6 px-4 py-6 sm:px-6 sm:py-8">
-      <BookStoreHero
-        onExplore={() => {
-          const el = document.getElementById("book-grid");
-          el?.scrollIntoView({ behavior: "smooth", block: "start" });
-        }}
-        onContinue={() => continueBookId && goRead(continueBookId)}
-        hasContinue={!!continueBookId}
-      />
+      {/* Header with Upload Button */}
+      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <BookStoreHero
+          onExplore={() => {
+            const el = document.getElementById("book-grid");
+            el?.scrollIntoView({ behavior: "smooth", block: "start" });
+          }}
+          onContinue={() => continueBookId && goRead(continueBookId)}
+          hasContinue={!!continueBookId}
+        />
+        <Button
+          onClick={() => setUploadOpen(true)}
+          variant="outline"
+          size="lg"
+          className="btn-press w-full md:w-auto"
+        >
+          <Plus className="mr-1.5 h-4 w-4" />
+          Thêm sách mới
+        </Button>
+      </div>
 
       <BookInsightCards />
 
@@ -131,6 +181,12 @@ function BooksPage() {
           toast.success("Đã mở khóa sách thành công");
           setUnlockTarget(null);
         }}
+      />
+
+      <UploadBookDialog
+        open={uploadOpen}
+        onOpenChange={setUploadOpen}
+        onUpload={handleUploadBook}
       />
     </div>
   );
