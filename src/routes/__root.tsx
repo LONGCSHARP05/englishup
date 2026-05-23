@@ -78,10 +78,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "description", content: "EnglishUp: Nền tảng học tiếng Anh cao cấp cho người Việt — từ vựng SRS, luyện nghe, luyện đọc và sách." },
       { name: "author", content: "EnglishUp" },
       { property: "og:title", content: "EnglishUp — Học tiếng Anh thông minh" },
-      { property: "og:description", content: "Nền tảng học tiếng Anh cao cấp cho người Việt." },
+      { property: "og:description", content: "EnglishUp: Nền tảng học tiếng Anh cao cấp cho người Việt — từ vựng SRS, luyện nghe, luyện đọc và sách." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "EnglishUp — Học tiếng Anh thông minh" },
+      { name: "twitter:description", content: "EnglishUp: Nền tảng học tiếng Anh cao cấp cho người Việt — từ vựng SRS, luyện nghe, luyện đọc và sách." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/b3016bb0-a9de-4531-8838-a9dd264c5aa3" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/b3016bb0-a9de-4531-8838-a9dd264c5aa3" },
     ],
     links: [
       {
